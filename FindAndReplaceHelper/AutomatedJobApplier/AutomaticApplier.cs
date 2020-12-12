@@ -14,19 +14,11 @@ namespace FindAndReplaceHelper.AutomatedJobApplier
 
         public void BeginApplicationProcess()
         {
-            driver = new ChromeDriver("D:\\3rdparty\\chrome");
-            driver.Manage().Window.Minimize();
-            Helpers helper = new Helpers();
-            WebDriverWait wait = helper.Wait(driver);
-            Actions action = new Actions(driver);
-
-            // InitiateApplicationProcess(wait);
-            BeginApplication(wait, helper);
+            BeginApplication();
             EndApplicationProcess();
         }
 
-        // defines what each job search does
-        void BeginApplication(WebDriverWait wait, Helpers helper)
+        void BeginApplication()
         {
 
             bool continueApp = true;
@@ -43,53 +35,65 @@ namespace FindAndReplaceHelper.AutomatedJobApplier
                 }
                 else if (coverType.Equals("SEEK", StringComparison.OrdinalIgnoreCase))
                 {
-                    ApplySeek(wait, helper);
+                    ApplySeek();
                 }
                 else if (coverType.Equals("Other", StringComparison.OrdinalIgnoreCase))
                 {
-                    ApplyOther(wait, helper);
+                    ApplyOther();
                 }
+                else Console.WriteLine("\nInvalid input, type 'Seek' or 'Other', then hit Enter.\n");
             }
-
-            // for each advert, check if it has a one of the keywords for the search, if so nav to the ad an apply for it
-           
         }
 
-        private void ApplyOther(WebDriverWait wait, Helpers helper)
+        private void ApplyOther()
         {
             Console.WriteLine("\n***********************************************************************************");
-            Console.WriteLine("********************** WELCOME TO OTHER BUILDER ***********************************");
+            Console.WriteLine("********************* WELCOME TO OTHER COVER BUILDER *********************************");
             Console.WriteLine("***********************************************************************************\n");
 
             bool continueGeneration = true;
 
             while (continueGeneration)
             {
-                string  exitWord = "exit", jobPositionTitle = string.Empty, companyName = string.Empty;
+                string exitWord = "exit", jobPositionTitle = string.Empty, companyName = string.Empty;
 
-                if (!jobPositionTitle.Equals(exitWord, StringComparison.OrdinalIgnoreCase) && !companyName.Equals(exitWord, StringComparison.OrdinalIgnoreCase))
+                Console.Write("Position Title: ");
+                jobPositionTitle = Console.ReadLine();
+
+                if (jobPositionTitle.Equals(exitWord, StringComparison.OrdinalIgnoreCase) || companyName.Equals(exitWord, StringComparison.OrdinalIgnoreCase))
                 {
-                    Console.Write("Position Title: ");
-                    jobPositionTitle = Console.ReadLine();
-
-                    Console.Write("\nPosition Title: ");
-                    companyName = Console.ReadLine();
-
-                    CoverBuilding coverBuilding = new CoverBuilding();
-                    coverBuilding.StartApplication(jobPositionTitle, companyName);
+                    Console.WriteLine();
+                    return;
                 }
-                else if 
-                    (jobPositionTitle.Equals(exitWord, StringComparison.OrdinalIgnoreCase) && companyName.Equals(exitWord, StringComparison.OrdinalIgnoreCase))
-                        continueGeneration = false;
+
+                Console.Write("\nCompany Name: ");
+                companyName = Console.ReadLine();
+
+                if (jobPositionTitle.Equals(exitWord, StringComparison.OrdinalIgnoreCase) || companyName.Equals(exitWord, StringComparison.OrdinalIgnoreCase))
+                {
+                    Console.WriteLine();
+                    return;
+                }
+
+                CoverBuilding coverBuilding = new CoverBuilding();
+                coverBuilding.StartApplication(jobPositionTitle, companyName);
+
+                Console.Beep(37, 3);
             }
         }
 
-        private void ApplySeek(WebDriverWait wait, Helpers helper)
+        private void ApplySeek()
         {
             Console.WriteLine("\n***********************************************************************************");
             Console.WriteLine("******************* WELCOME TO SEEK COVER BUILDER *********************************");
             Console.WriteLine("***********************************************************************************\n");
 
+
+            driver = new ChromeDriver("D:\\3rdparty\\chrome");
+            driver.Manage().Window.Minimize();
+            Helpers helper = new Helpers();
+            WebDriverWait wait = helper.Wait(driver);
+            Actions action = new Actions(driver);
             bool continueGeneration = true;
 
             while (continueGeneration)
@@ -125,6 +129,9 @@ namespace FindAndReplaceHelper.AutomatedJobApplier
 
                             CoverBuilding coverBuilding = new CoverBuilding();
                             coverBuilding.StartApplication(jobPositionTitle, companyName);
+
+                            Console.Beep(37, 3); // beep to notify when cover is ready - TODO: maybe get aws text to speec to read out job title and company in cover builder to confirm correct details generated
+                            // then say application is ready
                         }
                     }
                     catch (InvalidLinkException invalidSeekLink)

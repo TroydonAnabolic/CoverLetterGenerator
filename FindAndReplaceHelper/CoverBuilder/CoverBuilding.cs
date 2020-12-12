@@ -97,17 +97,18 @@ namespace FindAndReplaceHelper.CoverBuilder
             bool outputMatch = true;
             do
             {
+                string jobType = string.Empty;
                 // if we at count 0 we will ask the first question
                 if (count == 0)
                 {
                     ExitApp(ref word, ref miss, ref docs, output);
                     // if job title is not on the list, go to the next job title
-                    if (!CheckIfJobTitleOfInterest(output, ref relevantSkills, out count)) return false;
+                    if (!CheckIfJobTitleOfInterest(output, ref relevantSkills, out count, ref jobType)) return false;
                     Console.WriteLine("Relevant skills set");
                 }
 
                 string date = DateTime.Now.ToString("dddd, dd MMMM yyyy");
-                Console.WriteLine("Date Set");
+                Console.WriteLine("\nDate Set");
 
                 if (count == 1)
                 {
@@ -124,7 +125,7 @@ namespace FindAndReplaceHelper.CoverBuilder
                     if (company == "Private Advertiser")
                         company = ""; // if there is no name we reassign the value with an empty string
                 }
-                Console.WriteLine("Job Position Title is" + output + "\n");
+                Console.WriteLine("\nJob Position Title is " + output + "\n");
                 Console.WriteLine("Company name is " + company + "\n");
 
                 string addressingEmployer = "Sir/Madam";
@@ -155,7 +156,7 @@ namespace FindAndReplaceHelper.CoverBuilder
 
                 // TODO:possibly put this all on the top except saveas so we can use it when selecting the top intro part to acustom to job type
 
-                switch (output)
+                switch (jobType)
                 {
                     case "admin":
                         outputFI = @"D:\Troydon\Documents\JobStuff\JobHunt\cover letters\Customs\GeneralAdminCover.docx";
@@ -179,12 +180,13 @@ namespace FindAndReplaceHelper.CoverBuilder
                 // keep looping until either the counter is not one of the readline values, and while the elected output is valid
             } while (outputMatch && (count == 0 || count == 1 || count == 2 || count == 3 || count == 4));
 
-            Console.WriteLine("Cover Letter Generated, file saved to " + outputFI + "\n");
+            Console.WriteLine("Cover Letter Generated, file saved to " + outputFI);
+            Console.WriteLine("=================================================================================================================================\n");
             return outputMatch;
         }
 
-        static bool CheckIfJobTitleOfInterest(string jobTitle, ref string relevantSkills, out int? count)
-        {
+        static bool CheckIfJobTitleOfInterest(string jobTitle, ref string relevantSkills, out int? count, ref string jobType)
+       {
             bool isOfInterest = true;
 
             count = 0;
@@ -200,22 +202,45 @@ namespace FindAndReplaceHelper.CoverBuilder
                     // otherwise proceed to say we can apply
                     relevantSkills = "I have relevant skills useful to the role, which I obtained when I completed a Certificate IV in programming, that include basic C# OOP, ASP.NET Core, HTML, CSS, JavaScript, jQuery, SQL DBMS, Unity3D, Windows 10 OS, Microsoft Office 365 including Word and Excel, basic understanding of cloud services such as Azure and AWS. I am now applying these technologies into building my knowledge and skill level in creating beautiful, user friendly software, web and game applications. I am also working on using the programming, scripting and mark-up languages to learn the programming concepts such as algorithms, data structures, writing user-centric functional specifications, writing scalable code, understanding conditional logic, database design, responsive design.";
                     count = 1;
+                    jobType = "dev";
                     return true;
                 }
             }
+
+            foreach (string title in Constants.administratorTitles)
+            {
+                if (jobTitle.Contains(title))
+                {
+                    // if contains a developer for e.g and contains a title called senior without junior, then we dont want to apply
+                    // incase the job title says both junior and senior positions available
+                    if (jobTitle.Contains("Senior") && !jobTitle.Contains("Junior")) return false;
+
+                    // otherwise proceed to say we can apply
+                    relevantSkills = "I have three years’ work experience working in a call centre as a Customer Service Rep with Woolworths Mobile. Some of the duties of the role included managing SAP tickets, whereby I had to administer events such as network incidents, transport and logistics, customer complaints, and input relevant data such as customer information, device details, funds, network incidents and faults. I was also known by the company to perform well with these duties.";
+                    count = 1;
+                    jobType = "admin";
+                    return true;
+                }
+            }
+
+            foreach (string title in Constants.itSupportTitles)
+            {
+                if (jobTitle.Contains(title))
+                {
+                    // if contains a developer for e.g and contains a title called senior without junior, then we dont want to apply
+                    // incase the job title says both junior and senior positions available
+                    if (jobTitle.Contains("Senior") && !jobTitle.Contains("Junior")) return false;
+
+                    // otherwise proceed to say we can apply
+                    relevantSkills = "I have relevant skills useful to the role, I have achieved this when I completed a Certificate IV in proramming, this includes RDBMS such as SQL Server, MySQL, SQL, T-SQL. I have three years’ work experience working in a call centre as a Customer Service Rep with Woolworths Mobile. Some of the duties of the role included managing SAP tickets, whereby I had to administer events such as network incidents, transport and logistics, customer complaints, and input relevant data such as customer information, device details, funds, network incidents and faults. I was also known by the company to perform well with these duties.";
+                    count = 1;
+                    jobType = "itadmin";
+                    return true;
+                }
+            }
+
             // set description based on output's keywords
-            if (jobTitle == "admin")
-            {
-                Console.WriteLine("Success");
-                relevantSkills = "I have three years’ work experience working in a call centre as a Customer Service Rep with Woolworths Mobile. Some of the duties of the role included managing SAP tickets, whereby I had to administer events such as network incidents, transport and logistics, customer complaints, and input relevant data such as customer information, device details, funds, network incidents and faults. I was also known by the company to perform well with these duties.";
-                count = 1;
-            }
-            else if (jobTitle == "itadmin")
-            {
-                relevantSkills = "I have relevant skills useful to the role, I have achieved this when I completed a Certificate IV in proramming, this includes RDBMS such as SQL Server, MySQL, SQL, T-SQL. I have three years’ work experience working in a call centre as a Customer Service Rep with Woolworths Mobile. Some of the duties of the role included managing SAP tickets, whereby I had to administer events such as network incidents, transport and logistics, customer complaints, and input relevant data such as customer information, device details, funds, network incidents and faults. I was also known by the company to perform well with these duties.";
-                count = 1;
-            }
-            else if (jobTitle == "support")
+            if (jobTitle == "support")
             {
                 relevantSkills = "I am interested in this position; I believe I have the skills and enthusiasm needed to do well. I am looking to secure a role that involves working with technology. I enjoy working with technology and dealing with computers, and Windows OS. I have knowledge in Office 364 Suite and great troubleshooting skills, which I have gained when working with Woolworths Mobile as a Tech Support Representative for mobile devices including devices such as Android, iOS and OPPO.";
                 count = 1;
@@ -225,7 +250,12 @@ namespace FindAndReplaceHelper.CoverBuilder
                 relevantSkills = "I am interested in this position; I believe I have the skills and enthusiasm needed to do well. I am looking to secure a role that involves working with technology. I enjoy working with technology and dealing with computers, and Windows OS. I have knowledge in Office 364 Suite and great sales skills, which I have gained when working with Woolworths Mobile as a Tech Support Representative for mobile devices including devices such as Android, and OPPO.";
                 count = 1;
             }
-            else isOfInterest = false;
+            else
+            {
+                relevantSkills = "I have relevant skills useful to the role, which I obtained when I completed a Certificate IV in programming, that include basic C# OOP, ASP.NET Core, HTML, CSS, JavaScript, jQuery, SQL DBMS, Unity3D, Windows 10 OS, Microsoft Office 365 including Word and Excel, basic understanding of cloud services such as Azure and AWS. I am now applying these technologies into building my knowledge and skill level in creating beautiful, user friendly software, web and game applications. I am also working on using the programming, scripting and mark-up languages to learn the programming concepts such as algorithms, data structures, writing user-centric functional specifications, writing scalable code, understanding conditional logic, database design, responsive design.";
+                count = 1;
+                jobType = "dev";
+            }
 
             return isOfInterest;
         }
