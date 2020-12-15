@@ -110,7 +110,7 @@ namespace FindAndReplaceHelper.AutomatedJobApplier
                             throw new InvalidLinkException(advertisementLink);
 
                         driver.Url = advertisementLink;
-
+                        string jobPositionTitle = string.Empty, companyName = string.Empty;
 
                         if (helper.CheckIfXPathElementExist(driver, Constants.jobTitleXPath))
                         {
@@ -119,13 +119,24 @@ namespace FindAndReplaceHelper.AutomatedJobApplier
                             wait.Until(driver =>
                             driver.FindElement(By.XPath(Constants.jobTitleXPath)));
                             IWebElement jobTitleEl = driver.FindElement(By.XPath(Constants.jobTitleXPath));
+                            jobPositionTitle = jobTitleEl.Text;
 
-                            wait.Until(driver =>
-                              driver.FindElement(By.XPath(Constants.jobTitleXPath)));
-                            IWebElement companyNameEl = driver.FindElement(By.XPath(Constants.companyNameXPath));
+                            if (helper.CheckIfXPathElementExist(driver, Constants.companyNameXPath))
+                            {
+                                wait.Until(driver =>
+                                    driver.FindElement(By.XPath(Constants.companyNameXPath)));
+                                IWebElement companyNameEl = driver.FindElement(By.XPath(Constants.companyNameXPath));
+                                companyName = companyNameEl.Text;
+                            }
+                            else
+                            {
+                                wait.Until(driver =>
+                                  driver.FindElement(By.XPath(Constants.privateAdvertiserXPath)));
+                                IWebElement privateAdvertiserEl = driver.FindElement(By.XPath(Constants.privateAdvertiserXPath));
+                                companyName = privateAdvertiserEl.Text;
+                            }
 
-                            string jobPositionTitle = jobTitleEl.Text;
-                            string companyName = companyNameEl.Text;
+
 
                             CoverBuilding coverBuilding = new CoverBuilding();
                             coverBuilding.StartApplication(jobPositionTitle, companyName);

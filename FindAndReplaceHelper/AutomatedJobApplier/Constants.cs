@@ -43,6 +43,6 @@ namespace FindAndReplaceHelper.AutomatedJobApplier
 
         public const string jobTitleXPath = "//*[@id='app']/div/div[4]/div/div[2]/div/div/div[2]/div/div[1]/div/div[2]/article/section/span[2]/span/h1";
         public const string companyNameXPath = "//*[@id='app']/div/div[4]/div/div[2]/div/div/div[2]/div/div[1]/div/div[2]/article/section/h2/span[2]/span";
-
+        public const string privateAdvertiserXPath = "//*[@id='app']/div/div[4]/div/div[2]/div/div/div[2]/div/div[1]/div/div[2]/article/section/span[3]/span";
     }
 }

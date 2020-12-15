@@ -123,7 +123,7 @@ namespace FindAndReplaceHelper.CoverBuilder
                     ExitApp(ref word, ref miss, ref docs, company);
                     count = 3;
                     if (company == "Private Advertiser")
-                        company = ""; // if there is no name we reassign the value with an empty string
+                        company = "Seek"; // if there is no name we reassign the value with an empty string
                 }
                 Console.WriteLine("\nJob Position Title is " + output + "\n");
                 Console.WriteLine("Company name is " + company + "\n");
@@ -154,6 +154,7 @@ namespace FindAndReplaceHelper.CoverBuilder
 
                 miss = PopulateWordVariables(word, miss, docs, hiringManagersName, relevantSkills, company, bonusQuestion, output, date, addressingEmployer, advertiser);
 
+                
                 // TODO:possibly put this all on the top except saveas so we can use it when selecting the top intro part to acustom to job type
 
                 switch (jobType)
@@ -263,7 +264,7 @@ namespace FindAndReplaceHelper.CoverBuilder
         private static object PopulateWordVariables(Application word, object miss, Document docs, string hiringManagersName, string relevantSkills, string company, string bonusQuestion, string output, string date, string addressingEmployer, string advertiser)
         {
             // Replace text now, loop through this 8 times replacing all the needed text
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < 9; i++)
             {
                 Find contentReplace = word.Selection.Find;
                 contentReplace.ClearFormatting(); // check if this is hitting
@@ -279,7 +280,7 @@ namespace FindAndReplaceHelper.CoverBuilder
                         contentReplace.Text = "<Hiring manager’s name>";
                         break;
                     case 2:
-                        contentReplace.Text = "<Company>";
+                        contentReplace.Text = "<Company1>";
                         break;
                     case 3:
                         contentReplace.Text = "Sir/Madam";
@@ -296,6 +297,9 @@ namespace FindAndReplaceHelper.CoverBuilder
                     case 7:
                         contentReplace.Text = "<insert relevant skills intro here>"; // might be skipping because it is to enter before other answers? if it does not work then put both out of loop
                         break;
+                    case 8:
+                        contentReplace.Text = "<Company2>";
+                        break;
                     default:
                         break;
                 }
@@ -311,7 +315,14 @@ namespace FindAndReplaceHelper.CoverBuilder
                     case "<Hiring manager’s name>":
                         contentReplace.Replacement.Text = hiringManagersName;
                         break;
-                    case "<Company>":
+                    case "<Company1>":
+                        if (!company.Equals("Seek", StringComparison.OrdinalIgnoreCase)) // if the company has not been reassigned the value to seek, then will give it the company name
+                        {
+                            contentReplace.Replacement.Text = company;
+                        }
+                        else contentReplace.Replacement.Text = string.Empty;
+                        break;
+                    case "<Company2>":
                         contentReplace.Replacement.Text = company;
                         break;
                     case "Sir/Madam":
@@ -351,6 +362,10 @@ namespace FindAndReplaceHelper.CoverBuilder
             }
 
             docs.Content.Font.Color = WdColor.wdColorBlack;
+
+            // if the company is private advertiser, RemoveCompanyName() 
+
+
             return miss;
         }
 
