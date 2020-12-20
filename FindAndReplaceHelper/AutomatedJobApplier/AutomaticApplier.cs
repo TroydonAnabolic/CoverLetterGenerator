@@ -58,7 +58,7 @@ namespace FindAndReplaceHelper.AutomatedJobApplier
                 string exitWord = "exit", jobPositionTitle = string.Empty, companyName = string.Empty;
 
                 Console.Write("Position Title: ");
-                jobPositionTitle = Console.ReadLine();
+                jobPositionTitle = Console.ReadLine().Replace("\n", ""); // removes any new lines to avoid auto filling next entry with nothing
 
                 if (jobPositionTitle.Equals(exitWord, StringComparison.OrdinalIgnoreCase) || companyName.Equals(exitWord, StringComparison.OrdinalIgnoreCase))
                 {
@@ -67,7 +67,7 @@ namespace FindAndReplaceHelper.AutomatedJobApplier
                 }
 
                 Console.Write("\nCompany Name: ");
-                companyName = Console.ReadLine();
+                companyName = Console.ReadLine().Replace("\n", "");
 
                 if (jobPositionTitle.Equals(exitWord, StringComparison.OrdinalIgnoreCase) || companyName.Equals(exitWord, StringComparison.OrdinalIgnoreCase))
                 {
