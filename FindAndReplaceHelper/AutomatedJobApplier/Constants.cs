@@ -31,7 +31,7 @@ namespace FindAndReplaceHelper.AutomatedJobApplier
         public static readonly string[] itSupportTitles = new string[]
         {
             "IT Support Technician", "Service Desk", "IT Support", "System Admin", "IT Officer", "IT Support", "I.T Support", "IT Trainee", "IT Helpdesk", "Support Engineer",
-            "Helpdesk",
+            "Helpdesk", "Support"
         };
 
         public static readonly Dictionary<string, string> specificQuestionXPaths = new Dictionary<string, string>()

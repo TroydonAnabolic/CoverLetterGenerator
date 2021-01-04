@@ -15,7 +15,7 @@ namespace FindAndReplaceHelper.AutomatedJobApplier
         public void BeginApplicationProcess()
         {
             BeginApplication();
-            EndApplicationProcess();
+            EndSeekApplicationProcess();
         }
 
         void BeginApplication()
@@ -157,11 +157,14 @@ namespace FindAndReplaceHelper.AutomatedJobApplier
                     }
                 }
                 else if (advertisementLink.Equals(exitWord, StringComparison.OrdinalIgnoreCase))
+                {
                     continueGeneration = false;
+                    EndSeekApplicationProcess();
+                }
             }
         }
 
-        public void EndApplicationProcess()
+        public void EndSeekApplicationProcess()
         {
             driver.Close();
         }

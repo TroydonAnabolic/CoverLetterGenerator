@@ -210,7 +210,7 @@ namespace FindAndReplaceHelper.CoverBuilder
 
             foreach (string title in Constants.administratorTitles)
             {
-                if (jobTitle.Contains(title))
+                if (jobTitle.ToLower().Contains(title.ToLower()))
                 {
                     // if contains a developer for e.g and contains a title called senior without junior, then we dont want to apply
                     // incase the job title says both junior and senior positions available
@@ -226,7 +226,7 @@ namespace FindAndReplaceHelper.CoverBuilder
 
             foreach (string title in Constants.itSupportTitles)
             {
-                if (jobTitle.Contains(title))
+                if (jobTitle.ToLower().Contains(title.ToLower()))
                 {
                     // if contains a developer for e.g and contains a title called senior without junior, then we dont want to apply
                     // incase the job title says both junior and senior positions available
